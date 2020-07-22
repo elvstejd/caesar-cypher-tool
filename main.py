@@ -3,74 +3,97 @@ from tkinter import ttk
 import cypher
 
 class Window:
-
+    
     def __init__(self, root):
-
+        
         self.root = root
-        # self.root.geometry("900x600")
-        self.root.title("Cypher")
+        self.root.geometry("860x560+397+243")
+        self.root.minsize(148, 1)
+        self.root.maxsize(1924, 1055)
+        self.root.resizable(0, 0)
+        self.root.title("Caesar Cypher Tool")
 
-        self.main_frame = ttk.Frame(root, borderwidth=25, relief="raised")
-        self.main_frame.grid(column=0, row=0)
-
+        self.scale = IntVar()
         self.scale_value = IntVar()
-        self.scale_value_text = StringVar()
-        self.scale_value_text.set("0")
-        self.sentence_text = StringVar()
-        self.result_text = StringVar()
-
-        self.f1 = ttk.Frame(self.main_frame, borderwidth=5, relief="raised")
-        self.f1.grid(column=0, row=0, sticky=(N, E, W))
-        self.f2 = ttk.Frame(self.main_frame, borderwidth=5, relief="raised")
-        self.f2.grid(column=0, row=1, sticky=(E, W))
-        self.f3 = ttk.Frame(self.main_frame, borderwidth=5, relief="raised")
-        self.f3.grid(column=0, row=2, sticky=(E, W))
-        self.f4 = ttk.Frame(self.main_frame, borderwidth=50, relief="raised", width=900, height=25)
-        self.f4.grid(column=0, row=3)
-
-        self.title_label = ttk.Label(self.f1, text="CAESAR CYPHER TOOL")
-        self.title_label.pack()
-
-        self.sentence_label = ttk.Label(self.f2, text="Enter your sentence below")
-        self.sentence_label.grid(column=0, row=0)
-        self.sentence_entry = ttk.Entry(self.f2, textvariable=self.sentence_text)
-        self.sentence_entry.grid(column=0, row=1)
-        self.clear_button = ttk.Button(self.f2, text="Clear", command=self.clear_text)
-        self.clear_button.grid(column=0, row=2)
         
-        self.shift_number_label = ttk.Label(self.f3, textvariable=self.scale_value_text)
-        self.shift_number_label.grid(column=0, row=0)
-        self.shift_label = ttk.Label(self.f3, text="Select your desired shift")
-        self.shift_label.grid(column=0, row=1)
+        self.Text1 = Text(self.root)
+        self.Text1.place(relx=0.081, rely=0.606, relheight=0.282, relwidth=0.591)
 
-        self.shift_scale = ttk.Scale(self.f3, from_=-27, to=27, orient=HORIZONTAL, variable=self.scale_value, command=self.set_number_label)
-        self.shift_scale.grid(column=0, row=2)
-        self.shift_scale.bind("<ButtonRelease-1>", self.on_scale_release)
+        self.Text1.configure(background="white")
+        self.Text1.configure(font="TkTextFont")
+        self.Text1.configure(foreground="black")
+        self.Text1.configure(highlightbackground="#d9d9d9")
+        self.Text1.configure(highlightcolor="black")
+        self.Text1.configure(insertbackground="black")
+        self.Text1.configure(selectbackground="blue")
+        self.Text1.configure(selectforeground="white")
+        self.Text1.configure(wrap="word")
 
-        self.result_label = ttk.Label(self.f4, textvariable=self.result_text)
-        self.result_label.grid(column=0, row=0)
+        self.TEntry1 = Text(self.root)
+        self.TEntry1.configure(font="TkTextFont")
+        self.TEntry1.place(relx=0.083, rely=0.157, relheight=0.278, relwidth=0.586)
 
-        self.main_frame.grid_rowconfigure(0, weight=1)
-        self.root.grid_rowconfigure(0, weight=1)
-        self.root.grid_columnconfigure(0, weight=1)
+        self.TLabel1 = ttk.Label(self.root, text='''Insert your sentence below''')
+        self.TLabel1.place(relx=0.081, rely=0.107, height=24, width=184)
+        self.TLabel1.configure(font="TkDefaultFont")
+        self.TLabel1.configure(relief="flat")
+        self.TLabel1.configure(anchor='w')
+        self.TLabel1.configure(justify='left')
 
-        self.f2.grid_columnconfigure(0, weight=1)
-        self.f3.grid_columnconfigure(0, weight=1)
+        self.TLabel2 = ttk.Label(self.root, text='''Here is the result''')
+        self.TLabel2.place(relx=0.081, rely=0.553, height=24, width=138)
+        self.TLabel2.configure(font="TkDefaultFont")
+        self.TLabel2.configure(relief="flat")
+        self.TLabel2.configure(anchor='w')
+        self.TLabel2.configure(justify='left')
+
+        self.Label1 = ttk.Label(self.root)
+        self.Label1.place(relx=0.788, rely=0.178, height=26, width=79)
+        self.Label1.configure(text='''Select shift''')
+
+        self.Label2 = ttk.Label(self.root, textvariable=self.scale_value)
+        self.Label2.place(relx=0.892, rely=0.178, height=26, width=42)
+
+        self.TButton1 = ttk.Button(self.root, command=lambda: self.code('encode'))
+        self.TButton1.place(relx=0.336, rely=0.446, height=30, width=98)
+        self.TButton1.configure(takefocus="")
+        self.TButton1.configure(text='''Encode''')
+
+        self.TButton2 = ttk.Button(self.root, command=self.clear_text)
+        self.TButton2.place(relx=0.081, rely=0.446, height=30, width=98)
+        self.TButton2.configure(takefocus="")
+        self.TButton2.configure(text='''Clear''')
+
+        self.TScale1 = ttk.Scale(self.root, from_=26, to=-26, variable=self.scale, command=self.set_int_scale_val)
+        self.TScale1.place(relx=0.823, rely=0.267, relwidth=0.0, relheight=0.57, width=26, bordermode='ignore')
+        self.TScale1.configure(orient="vertical")
+        self.TScale1.configure(takefocus="")
+
+        self.TButton3 = ttk.Button(self.root, command=lambda: self.code('decode'))
+        self.TButton3.place(relx=0.209, rely=0.446, height=30, width=98)
+        self.TButton3.configure(takefocus="")
+        self.TButton3.configure(text='''Decode''')
         
 
-    def on_scale_release(self, event):
-        self.r = cypher.Caesar(self.sentence_text.get(), self.scale_value.get())
-        self.result_text.set(self.r.encode())
-        print(self.r.encode())
+    def code(self, m):
 
-    def set_number_label(self, event):
-        self.scale_value_text.set(self.scale_value.get())
+        self.sentence = self.TEntry1.get("1.0",'end-1c')
+        if m == 'encode':
+            self.message = cypher.Caesar(self.sentence, self.scale_value.get()).encode()
+        elif m == 'decode':
+            self.message = cypher.Caesar(self.sentence, (self.scale_value.get()*-1)).encode()
+        self.Text1.delete("1.0", END)
+        self.Text1.insert(END, self.message)
+
+    def set_int_scale_val(self, event):
+        self.scale_value.set(int(float(self.scale.get())))
 
     def clear_text(self):
-        self.sentence_text.set("")
-        self.result_text.set("")
+        self.TEntry1.delete("1.0", END)
+        self.Text1.delete("1.0", END)
+        self.scale.set(0)
         self.scale_value.set(0)
-        self.scale_value_text.set("0")
+        
 
 
 if __name__ == "__main__":
